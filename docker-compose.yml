@@ -1,0 +1,77 @@
+version: '3'
+services:
+  nwnxee-server:
+    image: nwnxee/unified:latest-full
+    restart: unless-stopped
+    volumes:
+      - ./server/:/nwn/home
+    ports:
+      - "5121:5121/udp"
+    stdin_open: true
+    tty: true
+    environment:
+      # nwnxee env
+      - NWN_MODULE=OpenLOTR
+      - NWN_SERVERNAME=Template Server Name
+      - NWN_PUBLICSERVER=1
+      - NWN_MAXCLIENTS=96
+      - NWN_MINLEVEL=1
+      - NWN_MAXLEVEL=40
+      - NWN_PAUSEANDPLAY=0
+      - NWN_PVP=2
+      - NWN_SERVERVAULT=1
+      - NWN_ELC=0
+      - NWN_ILR=0
+      - NWN_GAMETYPE=0
+      - NWN_ONEPARTY=0
+      - NWN_DIFFICULTY=3
+      - NWN_AUTOSAVEINTERVAL=0
+      - NWN_RELOADWHENEMPTY=0
+      - NWN_PLAYERPASSWORD=
+      - NWN_DMPASSWORD=password
+      - NWN_ADMINPASSWORD=password
+      - NWN_MAXHP=1
+      # nwnx other Settings
+      - NWNX_CORE_LOG_LEVEL=6
+      # nwnx env
+      - NWNX_ADMINISTRATION_SKIP=n
+      - NWNX_BEHAVIOURTREE_SKIP=y
+      - NWNX_CHAT_SKIP=y
+      - NWNX_CREATURE_SKIP=y
+      - NWNX_DAMAGE_SKIP=y
+      - NWNX_DATA_SKIP=y
+      - NWNX_EVENTS_SKIP=y
+      - NWNX_JVM_SKIP=y
+      - NWNX_LUA_SKIP=n
+      - NWNX_METRICS_INFLUXDB_SKIP=y
+      - NWNX_OBJECT_SKIP=y
+      - NWNX_PLAYER_SKIP=y
+      - NWNX_PROFILER_SKIP=y
+      - NWNX_REDIS_SKIP=y
+      - NWNX_RUBY_SKIP=y
+      - NWNX_SQL_SKIP=y
+      - NWNX_THREADWATCHDOG_SKIP=y
+      - NWNX_TIME_SKIP=y
+      - NWNX_TRACKING_SKIP=y
+      - NWNX_WEBHOOK_SKIP=y
+      - NWNX_TWEAKS_SKIP=n
+      # nwnx_tweaks
+      - NWNX_TWEAKS_HIDE_CLASSES_ON_CHAR_LIST=true
+      - NWNX_TWEAKS_DISABLE_PAUSE=true
+      # redis
+      - NWNX_REDIS_HOST=redis
+      
+    links:
+      - "redis:redis"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:4.0.5-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    hostname: redis
+    volumes:
+      - ./redis:/data
+    restart: always
+    stdin_open: true
+    tty: true
