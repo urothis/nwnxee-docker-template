@@ -10,7 +10,7 @@ services:
     stdin_open: true
     tty: true
     environment:
-      # nwnxee env
+      # nwserver env
       - NWN_MODULE=OpenLOTR
       - NWN_SERVERNAME=Template Server Name
       - NWN_PUBLICSERVER=1
