@@ -28,34 +28,37 @@ services:
       - NWN_DIFFICULTY=3
       - NWN_AUTOSAVEINTERVAL=0
       - NWN_RELOADWHENEMPTY=0
-      - NWN_PLAYERPASSWORD=NewcastleTester
+      - NWN_PLAYERPASSWORD=
       - NWN_DMPASSWORD=DorrianIsMyGod
       - NWN_ADMINPASSWORD=DorrianIsMyGod
       - NWN_MAXHP=1
       # nwnx other Settings
       - NWNX_CORE_LOG_LEVEL=6
       # nwnx env
-      - NWNX_ADMINISTRATION_SKIP=n
-      - NWNX_BEHAVIOURTREE_SKIP=n
-      - NWNX_CHAT_SKIP=n
-      - NWNX_CREATURE_SKIP=n
-      - NWNX_DAMAGE_SKIP=n
-      - NWNX_DATA_SKIP=n
-      - NWNX_EVENTS_SKIP=n
+      - NWNX_ADMINISTRATION_SKIP=y
+      - NWNX_BEHAVIOURTREE_SKIP=y
+      - NWNX_CHAT_SKIP=y
+      - NWNX_CREATURE_SKIP=y
+      - NWNX_DAMAGE_SKIP=y
+      - NWNX_DATA_SKIP=y
+      - NWNX_EVENTS_SKIP=y
       - NWNX_JVM_SKIP=y
       - NWNX_LUA_SKIP=n
-      - NWNX_METRICS_INFLUXDB_SKIP=y
-      - NWNX_OBJECT_SKIP=n
-      - NWNX_PLAYER_SKIP=n
+      - NWNX_METRICS_INFLUXDB_SKIP=n
+      - NWNX_OBJECT_SKIP=y
+      - NWNX_PLAYER_SKIP=y
       - NWNX_PROFILER_SKIP=n
-      - NWNX_REDIS_SKIP=y
+      - NWNX_REDIS_SKIP=n
       - NWNX_RUBY_SKIP=y
       - NWNX_SQL_SKIP=n
       - NWNX_THREADWATCHDOG_SKIP=y
-      - NWNX_TIME_SKIP=n
-      - NWNX_TRACKING_SKIP=n
-      - NWNX_WEBHOOK_SKIP=n
+      - NWNX_TIME_SKIP=y
+      - NWNX_TRACKING_SKIP=y
+      - NWNX_WEBHOOK_SKIP=y
       - NWNX_TWEAKS_SKIP=n
+      # Influxdb 
+      - NWNX_METRICS_INFLUXDB_HOST=grafana
+      - NWNX_METRICS_INFLUXDB_PORT=8086
       # nwnx_tweaks
       - NWNX_TWEAKS_HIDE_CLASSES_ON_CHAR_LIST=true
       - NWNX_TWEAKS_DISABLE_PAUSE=true
@@ -71,12 +74,13 @@ services:
 
     links:
       - "db:db"
+      - "redis:redis"
+      - "grafana:grafana"
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_started
-
   db:
     container_name: db
     image: mysql/mysql-server:5.7
@@ -101,3 +105,14 @@ services:
     volumes:
       - ./redis:/data
     restart: unless-stopped
+
+  grafana:
+    image: philhawthorne/docker-influxdb-grafana:latest
+    container_name: grafana
+    volumes:
+      - "./metrics/influxdb:/var/lib/influxdb"
+      - "./metrics/grafana:/var/lib/grafana"
+    ports:
+      - "3003:3003"
+      - "3004:8083"
+      - "8086:8086"
