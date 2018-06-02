@@ -15,7 +15,7 @@ For further help configuring nwserver, see the [nwserver documentation](https://
 
 ## Grafana
 Go to localhost:3003 to access Grafana.
-Default credentials are admin:admin
+Default credentials are root:root
 
 | Database |  |
 | --- | --- |
