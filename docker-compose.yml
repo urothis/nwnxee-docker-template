@@ -29,8 +29,8 @@ services:
       - NWN_AUTOSAVEINTERVAL=0
       - NWN_RELOADWHENEMPTY=0
       - NWN_PLAYERPASSWORD=
-      - NWN_DMPASSWORD=DorrianIsMyGod
-      - NWN_ADMINPASSWORD=DorrianIsMyGod
+      - NWN_DMPASSWORD=
+      - NWN_ADMINPASSWORD=
       - NWN_MAXHP=1
       # nwnx other Settings
       - NWNX_CORE_LOG_LEVEL=6
