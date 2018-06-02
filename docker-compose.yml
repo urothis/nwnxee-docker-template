@@ -107,7 +107,7 @@ services:
     restart: unless-stopped
 
   grafana:
-    image: philhawthorne/docker-influxdb-grafana:latest
+    image: philhawthorne/docker-influxdb-grafana:edge
     container_name: grafana
     volumes:
       - "./metrics/influxdb:/var/lib/influxdb"
