@@ -1,8 +1,9 @@
-version: '2.3'
+version: '2.4'
 services:
   nwnxee-server:
+    container_name: nwnxee-server
     image: nwnxee/unified:latest
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./server/:/nwn/home
     ports:
@@ -13,10 +14,10 @@ services:
       # nwserver env
       - NWN_MODULE=DockerDemo
       - NWN_SERVERNAME=I was too lazy to configure my server.
-      - NWN_PUBLICSERVER=1
+      - NWN_PUBLICSERVER=0
       - NWN_MAXCLIENTS=96
       - NWN_MINLEVEL=1
-      - NWN_MAXLEVEL=40
+      - NWN_MAXLEVEL=10
       - NWN_PAUSEANDPLAY=0
       - NWN_PVP=2
       - NWN_SERVERVAULT=1
@@ -27,51 +28,76 @@ services:
       - NWN_DIFFICULTY=3
       - NWN_AUTOSAVEINTERVAL=0
       - NWN_RELOADWHENEMPTY=0
-      - NWN_PLAYERPASSWORD=
-      - NWN_DMPASSWORD=password
-      - NWN_ADMINPASSWORD=password
+      - NWN_PLAYERPASSWORD=NewcastleTester
+      - NWN_DMPASSWORD=DorrianIsMyGod
+      - NWN_ADMINPASSWORD=DorrianIsMyGod
       - NWN_MAXHP=1
       # nwnx other Settings
       - NWNX_CORE_LOG_LEVEL=6
       # nwnx env
       - NWNX_ADMINISTRATION_SKIP=n
-      - NWNX_BEHAVIOURTREE_SKIP=y
-      - NWNX_CHAT_SKIP=y
-      - NWNX_CREATURE_SKIP=y
-      - NWNX_DAMAGE_SKIP=y
-      - NWNX_DATA_SKIP=y
-      - NWNX_EVENTS_SKIP=y
+      - NWNX_BEHAVIOURTREE_SKIP=n
+      - NWNX_CHAT_SKIP=n
+      - NWNX_CREATURE_SKIP=n
+      - NWNX_DAMAGE_SKIP=n
+      - NWNX_DATA_SKIP=n
+      - NWNX_EVENTS_SKIP=n
       - NWNX_JVM_SKIP=y
       - NWNX_LUA_SKIP=n
       - NWNX_METRICS_INFLUXDB_SKIP=y
-      - NWNX_OBJECT_SKIP=y
-      - NWNX_PLAYER_SKIP=y
-      - NWNX_PROFILER_SKIP=y
+      - NWNX_OBJECT_SKIP=n
+      - NWNX_PLAYER_SKIP=n
+      - NWNX_PROFILER_SKIP=n
       - NWNX_REDIS_SKIP=y
       - NWNX_RUBY_SKIP=y
-      - NWNX_SQL_SKIP=y
+      - NWNX_SQL_SKIP=n
       - NWNX_THREADWATCHDOG_SKIP=y
-      - NWNX_TIME_SKIP=y
-      - NWNX_TRACKING_SKIP=y
-      - NWNX_WEBHOOK_SKIP=y
+      - NWNX_TIME_SKIP=n
+      - NWNX_TRACKING_SKIP=n
+      - NWNX_WEBHOOK_SKIP=n
       - NWNX_TWEAKS_SKIP=n
       # nwnx_tweaks
       - NWNX_TWEAKS_HIDE_CLASSES_ON_CHAR_LIST=true
       - NWNX_TWEAKS_DISABLE_PAUSE=true
+      # Configure sqlDB and stuff
+      - NWNX_SQL_TYPE=MYSQL
+      - NWNX_SQL_HOST=db
+      - NWNX_SQL_ROOT_PASSWORD=password
+      - NWNX_SQL_DATABASE=database
+      - NWNX_SQL_USERNAME=username
+      - NWNX_SQL_PASSWORD=password
       # redis
       - NWNX_REDIS_HOST=redis
-      
+
     links:
-      - "redis:redis"
+      - "db:db"
     depends_on:
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  db:
+    container_name: db
+    image: mysql/mysql-server:5.7
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=database
+      - MYSQL_USER=username
+      - MYSQL_PASSWORD=password
+    volumes:
+      - ./mysql-db:/docker-entrypoint-initdb.d
+    restart: unless-stopped
 
   redis:
-    image: redis:4.0.5-alpine
+    container_name: redis  
+    image: healthcheck/redis:latest
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     volumes:
       - ./redis:/data
-    restart: always
-    stdin_open: true
-    tty: true
+    restart: unless-stopped
