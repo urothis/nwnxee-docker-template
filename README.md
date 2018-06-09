@@ -4,8 +4,13 @@ Reference project for running [nwnxee](https://github.com/nwnxee/unified) with d
 
 ## Run
 
-Run: `docker-compose up -d`
-Kill: `docker-compose down`
+Prior running anything, please check `docker-compose.yml` file. In there you will find this text `<Your password goes here>` which needs to be changed to the **SAME** value as the one in the `MYSQL_ROOT_PASSWORD` variable found on the config/db.env configuration file.
+
+Run:
+`docker-compose up -d`
+
+Kill:
+`docker-compose down`
 
 ## Configuration
 
@@ -14,6 +19,7 @@ The bundled module DockerDemo is loaded by default. To load a different module, 
 For further help configuring nwserver, see the [nwserver documentation](https://hub.docker.com/r/beamdog/nwserver/).
 
 ## Grafana
+
 Go to localhost:3003 to access Grafana.
 Default credentials are root:root
 
@@ -26,8 +32,9 @@ Default credentials are root:root
 
 
 I will eventually get this configured to have this part automatically setup with premade dashboards
-  
+
 ## Influxdb
+
 Go to localhost:3004 to access Influxdb
 
 ## Hint
