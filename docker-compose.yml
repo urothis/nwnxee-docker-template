@@ -22,15 +22,21 @@ services:
       - "5121:5121/udp"
   db:
     container_name: db
-    image: mysql/mysql-server:5.7
+    image: mariadb:latest
     env_file: ./config/db.env
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      # Change <Your password goes here> by what you put on the MYSQL_ROOT_PASSWORD variable on the db.env file.
+      # There should be no paces between -p and the value! (I.E: -ppassword is correct!)
+      test: ["CMD", "mysqladmin", "-p<Your password goes here>", "ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
+      start_period: 5s
     volumes:
-      - ./mysql-db:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/mysql:rw
+      #- ./mysql-db:/docker-entrypoint-initdb.d         # TODO: Allow users to initialize their data using this.
     restart: unless-stopped
+    ports:
+      - "3306:3306"
   redis:
     container_name: redis
     image: healthcheck/redis:latest
@@ -49,3 +55,5 @@ services:
       - "3003:3003"
       - "3004:8083"
       - "8086:8086"
+volumes:
+  mysql-data:

@@ -5,6 +5,8 @@ server
 homedir
 installdir
 resman
+redis
+metrics
 config.yml
 
 # Other #
