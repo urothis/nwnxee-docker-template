@@ -6,6 +6,10 @@ homedir
 installdir
 resman
 config.yml
+metrics
+mysql-db
+redis
+logs
 
 # Other #
 ###################

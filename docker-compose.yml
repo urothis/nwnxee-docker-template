@@ -1,51 +1,36 @@
-version: '2.4'
+version: '3'
 services:
-  nwnxee-server:
-    container_name: nwnxee-server
-    image: nwnxee/unified:latest
-    env_file: ./config/nwserver.env
-    stdin_open: true
-    tty: true
-    links:
-      - "db:db"
-      - "redis:redis"
-      - "grafana:grafana"
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
-    volumes:
-      - ./server/:/nwn/home
-    restart: always
-    ports:
-      - "5121:5121/udp"
   db:
-    container_name: db
     image: mysql/mysql-server:5.7
-    env_file: ./config/db.env
+    env_file: ${PWD-.}/config/db.env
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
     volumes:
-      - ./mysql-db:/docker-entrypoint-initdb.d
+      - ${PWD-.}/mysql-db:/docker-entrypoint-initdb.d
     restart: unless-stopped
   redis:
-    container_name: redis
     image: healthcheck/redis:latest
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     volumes:
-      - ./redis:/data
+      - ${PWD-.}/redis:/data
     restart: unless-stopped
-  grafana:
-    image: philhawthorne/docker-influxdb-grafana:edge
-    container_name: grafana
+  nwnxee-server:
+    image: nwnxee/unified:latest
+    env_file: ${PWD-.}/config/nwserver.env
+    stdin_open: true
+    tty: true
+    links:
+      - "db:db"
+      - "redis:redis"
+    depends_on:
+      - db
+      - redis
     volumes:
-      - "./metrics/influxdb:/var/lib/influxdb"
-      - "./metrics/grafana:/var/lib/grafana"
+      - ${PWD-.}/logs:/nwn/run/logs.0
+      - ${PWD-.}/server/:/nwn/home
+    restart: always
     ports:
-      - "3003:3003"
-      - "3004:8083"
-      - "8086:8086"
+      - "5121:5121/udp"
