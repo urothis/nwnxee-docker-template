@@ -18,7 +18,15 @@ This will spin up an NWN server running in a docker container.
 
 If you want to run the container in the background, such as when running on a dedicated server, use the `-d` option.
 
-To view the container logs use `docker-compose logs`. See [here](https://docs.docker.com/compose/reference/logs/) for more info.
+
+**Run the server**
+
+Logs are created when compose goes up.
+```
+./logs/nwserverError1.txt
+./logs/nwserverLog1.txt
+```
+
 
 **To stop the server for any reason**
 
