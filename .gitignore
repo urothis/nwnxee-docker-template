@@ -33,3 +33,5 @@ INTRODUCTION.md
 README.md
 SETUP.md
 README.md
+config/db.env
+config/nwserver.env

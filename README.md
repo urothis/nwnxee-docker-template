@@ -81,17 +81,6 @@ _Note: If you're changing the external port address for your NWN server, then yo
 ## MySQL
 Go to `<server ip>:3306` to access MySQL.
 
-## Grafana
-Go to `<server ip>:3003` to access Grafana.
-Default credentials are root:root
-
-| Database |  |
-| --- | --- |
-| Type | influxdb |
-| Url | `http://<server ip>:8086` |
-| Access | direct |
-| Database | _internal |
-
 ## Module Development
 
 If you're interested in version controlling your module in a textual format, check out [nwn-devbase](https://github.com/jakkn/nwn-devbase "The best tool") to learn how to process your files outside of the toolset.
