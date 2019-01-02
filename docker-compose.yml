@@ -1,18 +1,19 @@
 version: '3'
 services:
   db:
-    image: mysql/mysql-server:5.7
+    image: mysql/mysql-server:5.6
     env_file: ${PWD-.}/config/db.env
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
     volumes:
+      - ./mysql:/var/lib/mysql
       - ${PWD-.}/mysql-db:/docker-entrypoint-initdb.d
     restart: unless-stopped
   redis:
-    image: healthcheck/redis:latest
-    command: ["redis-server", "--appendonly", "yes"]
+    image: redis
+    command: ["redis-server", "--appendonly", "no"]
     hostname: redis
     volumes:
       - ${PWD-.}/redis:/data
@@ -25,9 +26,6 @@ services:
     links:
       - "db:db"
       - "redis:redis"
-    depends_on:
-      - db
-      - redis
     volumes:
       - ${PWD-.}/logs:/nwn/run/logs.0
       - ${PWD-.}/server/:/nwn/home
