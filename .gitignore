@@ -1,6 +1,7 @@
 # Project files #
 ###################
 cache
+database
 server
 homedir
 installdir
@@ -28,11 +29,3 @@ NWN
 .Trashes
 ehthumbs.db
 Thumbs.db
-docker/server.env
-DOCKERGUIDE.md
-INTRODUCTION.md
-README.md
-SETUP.md
-README.md
-config/db.env
-config/nwserver.env

@@ -1,34 +1,52 @@
 version: '3'
 services:
   db:
-    image: mysql/mysql-server:5.6
+    hostname: db
+    image: mariadb:10
     env_file: ${PWD-.}/config/db.env
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
     volumes:
-      - ./mysql:/var/lib/mysql
+      - ./database:/var/lib/mysql
       - ${PWD-.}/mysql-db:/docker-entrypoint-initdb.d
     restart: unless-stopped
   redis:
+    hostname: redis
     image: redis
     command: ["redis-server", "--appendonly", "no"]
     hostname: redis
     volumes:
       - ${PWD-.}/redis:/data
     restart: unless-stopped
-  nwnxee-server:
+  nwserver:
+    hostname: nwserver
     image: nwnxee/unified:latest
     env_file: ${PWD-.}/config/nwserver.env
     stdin_open: true
     tty: true
-    links:
-      - "db:db"
-      - "redis:redis"
     volumes:
       - ${PWD-.}/logs:/nwn/run/logs.0
       - ${PWD-.}/server/:/nwn/home
-    restart: always
+    restart: unless-stopped
     ports:
       - "5121:5121/udp"
+  influxdb:
+    hostname: influxdb
+    image: influxdb:1.7
+    restart: unless-stopped
+    env_file: ${PWD-.}/config/influxdb.env
+    volumes:
+    - influxdb:/var/lib/influxdb
+  grafana:
+    hostname: grafana
+    image: grafana/grafana:6.0.1
+    restart: unless-stopped
+    ports:
+    - '127.0.0.1:3000:3000'
+    depends_on:
+    - influxdb
+    env_file: ${PWD-.}/config/grafana.env
+    volumes:
+    - ./grafana-provisioning:/etc/grafana/provisioning
+    - grafana:/var/lib/grafana
+volumes:
+  influxdb:
+  grafana:
