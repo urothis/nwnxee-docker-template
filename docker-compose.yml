@@ -12,7 +12,8 @@ services:
     hostname: redis
     image: redis
     command: ["redis-server", "--appendonly", "no"]
-    hostname: redis
+    sysctls:
+      net.core.somaxconn: '511'
     volumes:
       - ${PWD-.}/redis:/data
     restart: unless-stopped
