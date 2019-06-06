@@ -10,17 +10,19 @@ services:
     restart: unless-stopped
   redis:
     hostname: redis
-    image: redis
+    image: redis:latest
     command: ["redis-server", "--appendonly", "no"]
-    sysctls:
-      net.core.somaxconn: '511'
     volumes:
       - ${PWD-.}/redis:/data
-    restart: unless-stopped
+    restart: always
+    expose:
+      - "6379"
   nwserver:
     hostname: nwserver
     image: nwnxee/unified:latest
     env_file: ${PWD-.}/config/nwserver.env
+    links:
+      - "redis:redis"
     stdin_open: true
     tty: true
     volumes:
