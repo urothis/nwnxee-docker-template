@@ -23,6 +23,22 @@ ERROR: Get https://registry-1.docker.io/v2/mysql/mysql-server/manifests/5.7: una
 
 In order to solve this you have to run ```docker logout``` and make sure that you've logged out from your Docker Hub account. In general, you will **NEVER** need to login using nwnxee-template to pull Docker images. But if you still need it, you need to login with your username / password, insted of e-mail /password.
 
+## Docker
+### What do I do if there's a new NWNXEE / NWserver version?
+In order to update a Docker image we would run the ``docker pull`` command. In our specific case, we want to update NWNXEE and NWserver, so we would run:
+
+```
+docker pull nwnxee/unified
+```
+
+After this, you would have the latest NWNXEE and NWserver image on your host, but in order to update your server you would need to restart your ``docker-compose``. In order to do that just run these commands one after another, from the same location where your ``docker-compose.yml`` file is located:
+
+```
+docker-compose down
+docker-compose up
+```
+After this, your server NWNXEE and NWServer version should be updated to the latest version!
+
 **Source** <br />
 [Docker Forums Thread](https://forums.docker.com/t/unauthorized-incorrect-username-or-password/35677)
 
