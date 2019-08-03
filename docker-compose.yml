@@ -9,7 +9,7 @@ services:
       - ${PWD-.}/mysql-db:/docker-entrypoint-initdb.d
     restart: unless-stopped
   redis:
-    hostname: redis
+    hostname: redis:5
     image: redis:latest
     command: ["redis-server", "--appendonly", "no"]
     volumes:
@@ -30,7 +30,7 @@ services:
       - ${PWD-.}/server/:/nwn/home
     restart: unless-stopped
     ports:
-      - "5121:5121/udp"
+      - "127.0.0.1:5121:5121/udp"
   influxdb:
     hostname: influxdb
     image: influxdb:1.7
