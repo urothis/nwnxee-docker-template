@@ -19,7 +19,7 @@ services:
       - "6379"
   nwserver:
     hostname: nwserver
-    image: nwnxee/unified:build8186-lts
+    image: nwnxee/unified:build8193.5
     env_file: ${PWD-.}/config/nwserver.env
     links:
       - "redis:redis"
