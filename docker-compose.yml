@@ -19,6 +19,7 @@ services:
       - "6379"
   nwserver:
     hostname: nwserver
+    stop_signal: SIGINT
     image: nwnxee/unified:latest
     env_file: ${PWD-.}/config/nwserver.env
     links:
@@ -30,7 +31,7 @@ services:
       - ${PWD-.}/server/:/nwn/home
     restart: unless-stopped
     ports:
-      - "127.0.0.1:5121:5121/udp"
+      - "5121:5121/udp"
   influxdb:
     hostname: influxdb
     image: influxdb:1.7
