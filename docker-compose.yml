@@ -2,7 +2,7 @@ version: '3'
 services:
   db:
     hostname: db
-    image: mariadb:10
+    image: postgres:latest
     env_file: ${PWD-.}/config/db.env
     volumes:
       - ./database:/var/lib/mysql
@@ -15,8 +15,6 @@ services:
     volumes:
       - ${PWD-.}/redis:/data
     restart: always
-    expose:
-      - "6379"
   nwserver:
     hostname: nwserver
     stop_signal: SIGINT
@@ -43,8 +41,6 @@ services:
     hostname: grafana
     image: grafana/grafana:6.0.1
     restart: unless-stopped
-    ports:
-    - '127.0.0.1:3000:3000'
     depends_on:
     - influxdb
     env_file: ${PWD-.}/config/grafana.env
