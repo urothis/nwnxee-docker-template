@@ -5,8 +5,8 @@ services:
     image: postgres:latest
     env_file: ${PWD-.}/config/db.env
     volumes:
-      - ./database:/var/lib/mysql
-      - ${PWD-.}/mysql-db:/docker-entrypoint-initdb.d
+      - ./database:/var/lib/postgresql/data
+      - ${PWD-.}/init-db:/docker-entrypoint-initdb.d
     restart: unless-stopped
   redis:
     hostname: redis:5
